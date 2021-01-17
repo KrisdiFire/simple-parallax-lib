@@ -1,6 +1,6 @@
 /*!
-	By Kristian Firedi, krisdifire.github.io
-	Website: krisdifire.github.io/parallax
+    By Kristian Firedi, krisdifire.github.io
+    Website: krisdifire.github.io/parallax
 	Available for use under the MIT License
 	Version 1.1
 */
@@ -14,10 +14,19 @@ let value_lerp = 0;
 //initialisator
 function runner() {
     let prlxElements = document.querySelectorAll('.prlx-element');
+
     for (let i = 0, n = prlxElements.length; i < n; ++i) {
-        if (window.innerWidth > 768 /*&& window.innerHeight < window.innerWidth*/) { 
+
+        if (prlxElements[i].classList.contains('on-small') && window.innerWidth > 768) {
+            prlxElements[i].classList.remove('on-small');
+        }
+        if (window.innerWidth > 768 && prlxElements[i].classList.contains('on-small') == false /*&& window.innerHeight < window.innerWidth*/) { 
                 transform(prlxElements[i], value_lerp);
-        } else { prlxElements[i].style.transform = `translate3d(0, 0, 0)`; }
+        } else { 
+            prlxElements[i].style.transform = `translate3d(0, 0, 0)`; 
+            prlxElements[i].classList.add('on-small');
+        }
+
     }
 }
 runner();
