@@ -13,6 +13,6 @@ intend to.
 Wisit this [page](https://krisdifire.github.io/parallax.html "Parallax") for a nice summary as well as
 examples in action.
 # Questions?
-Either leave them here, or find my contact [here](https://krisdifire.github.io/ "Kris' portfolio").
+Either leave them here, or find my contact info on my [portfolio](https://krisdifire.github.io/ "Kris' portfolio").
 I would love to hear how this script can be more optimized and improved upon.
-#Cheers!
+# Cheers!
