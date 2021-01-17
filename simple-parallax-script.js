@@ -105,7 +105,6 @@ function transform(el, vl) {
                     el.style.transform =
                         `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${vl}, 0, 1)`;
                 }
-                
                 window.requestAnimationFrame(transformPrlxLerp);
             } else {
                 el.classList.remove("active");
@@ -204,6 +203,6 @@ function transform(el, vl) {
 }
 //is an element in the viewport (top/bot - it will work if it's hidden on the sides)
 function isInView(el) {
-    let box = el.getBoundingClientRect();
-    return box.top < window.innerHeight && box.bottom >= 0;
+    let rect = el.getBoundingClientRect();
+    return rect.top < window.innerHeight && rect.bottom >= 0;
 }
