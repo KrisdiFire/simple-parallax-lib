@@ -1,5 +1,6 @@
 /*!
 	By Kristian Firedi, krisdifire.github.io
+	Website: krisdifire.github.io/parallax
 	Available for use under the MIT License
 	Version 1.1
 */
