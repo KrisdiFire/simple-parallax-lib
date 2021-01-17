@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset='utf-8'>
+    
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    
+    <title>Parallax Effect</title>
+
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link defer href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+    <link defer href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+    
+    <link defer rel='stylesheet' type='text/css' media='screen' href='css/parallax.css'>
+
+</head>
+<body class=" grainy">
+
+    <div id="scrolly">
+        <div id="scrolled-am">
+            <span id="scroll-hand"></span>
+        </div>
+    </div>
+    
+<div class="whole-page">
+
+    <div class="page">
+
+        <section style="height: 100vh;" class="content-row height100 prlx-section nopad over-hide-med">
+
+            <div id="gc1" class="huge-circ circ-inside pos-ab"><p></p></div>
+
+            <div class="content col10 height25">
+                <div class="title-lc">
+                    <a class="a1">Simple Parallax Lib</a>
+                    <a class="a2">V1.1</a>
+                </div>
+            </div>
+
+            <div class="content-row height50 nomar cont-cent-hor width-override over-hide-med0">
+            
+                <div class="content col10 cont-cent">
+                    <div class="prlx-container-head mar-right">
+                        <span data-prlx_speed="1" class="scal-txt prlx-element prlx-lerp">L</span>
+                        <span data-prlx_speed="1.5" class="scal-txt prlx-element prlx-lerp">E</span>
+                        <span data-prlx_speed="-1" class="scal-txt prlx-element prlx-lerp">T'</span>
+                        <span class="scal-txt">S</span>
+                        <span class="scal-txt">&nbsp;</span>
+                        <span data-prlx_speed="2" class="scal-txt prlx-element prlx-lerp">S</span>
+                        <span class="scal-txt pos-rel">C</span>
+                        <span data-prlx_speed="1.25" class="scal-txt prlx-element prlx-lerp">R</span>
+                        <span data-prlx_speed="2.5" class="scal-txt prlx-element prlx-lerp ">O</span>
+                        <span data-prlx_speed="1" class="scal-txt prlx-element prlx-lerp ">L</span>
+                        <span data-prlx_speed="-1.75" class="scal-txt prlx-element prlx-lerp ">L</span>
+                    </div>
+
+                    <div class="content col10 overflow-hidden0 cont-cent">
+                    </div>
+                    
+                    
+                    <div data-prlx_speed="4" id="gc2" class="med-circ circ-inside prlx-element prlx-norm pos-ab"><p></p></div>
+                    <div data-prlx_speed="-4" id="gc3" class="big-circ circ-inside prlx-element prlx-norm pos-ab"><p></p></div>
+                    <div id="gc4" class="big-circ circ-inside pos-ab"><p></p></div>
+        
+                </div>
+        
+            </div>
+
+            <div class="content col10 pos-rel height25">
+                <hr class="seg-hr">
+            </div>
+            
+        </section>
+
+        <section id="intro"  style="overflow: hidden;" class="content-row height50">
+
+            <div class="content col05">
+
+                <ul class="list-01">
+
+                    <li><a href="#setup">Download</a></li>
+
+                    <li><a href="#intro">Intro</a></li>
+
+                    <li><a href="#examples">Examples & Explanation</a></li>
+
+                    <li><a href="#setup">Setup</a></li>
+
+                    <li><a href="https://www.paypal.me/KFiredi">Support me</a></li>
+                </ul>             
+
+            </div>
+
+            <div class="content col02"></div>
+
+            <div class="content col03 black-bg">
+                <p class=" text-color-bg">This is a simple parallax effect library incorporating lerp and sideways transformations in order
+                    to introduce a modern feel into any webpage. It was built with simplicity in mind, so there are 
+                    no dependencies or scroll hacks here!
+                </p>
+            </div>
+
+        </section>
+
+        <section id="examples" class="content-row height150 prlx-section">
+
+            <div style="height: 3rem;" class="not-on-lar"></div>
+
+            <div style="height: 0;" class="content col10 pos-rel">
+                <hr class="seg-hr">
+            </div>
+
+            <div class="content col10 height25">
+                <p>prlx-section</p>
+            </div>
+
+            <div style="height: auto; position: relative;" class="content col04 pull-front body-bg0">
+                <h2 data-prlx_speed="4" data-prlx_stop_l="500" data-prlx_stop_r="0" class="scal-txt-04 nopad-l-r text-color-bg left-black-bg prlx-element prlx-sideways with-lerp with-stop ">What do? <span style="font-size: 1rem; font-family: 'Montserrat', sans-serif; right: 0; top: 0; position: absolute; padding: 1rem;" class="not-on-med">prlx-sideways <br> with-lerp <br> with-stop </span> <span style="position: absolute; font-size: 1rem; font-family: 'Montserrat', sans-serif; top: -2rem; right: 1rem;
+                    transform-origin: center top;
+                    transform: translate3d(50%, 200%0, 0) rotate(90deg0); color: black;">speed x4</span> </h2>
+                <br>
+                <p class="border-bl">With a mixture of classes and data attributes,
+                    this script allows you to make elements that have start/stop positions, lerp up/down as well as sideways
+                    , or just achieve the good ol' parallax effect with relative ease. Also, the elements are moving only when their prlx-section parent, or 
+                    the element itself comes into the viewport so as to reduce the load on the users device.
+                <br><br>
+                    Also, the elements will be in their origin position (in other words "0") when their parent element is exactly in the 
+                    center of the screen. <span class="not-on-med"> To check, open the dev tools and inspect the elements while the "<u>center</u>" text is directly in the center
+                    of the moving circle. </span>
+                </p>
+
+            </div>
+
+            <div class="content col02 cont-cent not-on-med">
+                <div data-prlx_speed="3" data-prlx_stop_b="75" data-prlx_stop_t="150" id="gc5" class="huge-circ prlx-element prlx-norm with-stop circ-inside"> <span id="stop-tb-txt">with-stop<br> speed x3 </span>  </div>
+                <p style="position: absolute; text-decoration: underline;">center</p>
+            </div>
+
+            
+
+            <div data-prlx_speed="1.5" style="border: solid black 2px; overflow: hidden;" class="content col04 cont-cent height75 prlx-element prlx-norm">
+                <p class="el-name" >prlx-norm</p>
+                <p class="speed-for-sq-r">speed x1.5</p>
+                <div data-prlx_speed="2" style="border: solid black 2px; height: 20vw; width: 20vw; background-color: lightcoral;" class="content prlx-element prlx-lerp cont-cent">
+                <p class="el-name">prlx-lerp</p>
+                <p class="speed-for-sq-r" id="sml-sq-sp">speed x2</p>
+                </div>
+
+            </div>
+
+            <div class="content col10 pos-rel height25">
+                <hr class="seg-hr">
+            </div>
+
+        </section>
+
+        <section class="content-row not-on-med height25">
+        </section>
+
+        
+
+        <section id="setup"  class="content-row height50 prlx-section">
+
+                <div class="content col10 height25 cont-cent-hor0">
+                    <h2 class="text-color-black scal-txt-04">How to setup?</h2>
+                </div>
+
+            <div class="content col05 border-bl gree-bg text-color-white">
+                <h2 class="text-color-black scal-txt-04">1.</h2>
+                <p>Set up a container element which will encapsulate the parallaxing elements, and give it a class name of <b> prlx-section</b>.</p>
+            </div>
+   
+            <div data-prlx_speed="-2" data-prlx_stop_l="0" data-prlx_stop_r="100" class="content col05 border-bl prlx-element prlx-sideways with-lerp with-stop text-color-white">
+                <h2 class="text-color-black scal-txt-04 not-on-med">3.</h2>
+                <p class="text-color-black not-on-med">When the classes are in place, give each element the speed by which they'll move with
+                    the <b>data-prlx_speed="x"</b>, where "x" is any number you wish. By adding a negative value, the element
+                    will parallax in the opposite direction.
+                </p>
+                <h2 class="text-color-black scal-txt-04 not-on-lar">2.</h2>
+                <p class="text-color-black not-on-lar">When you have made the layout per your liking inside the section and want to parallax
+                    some elements, give them the <b> <u> prlx-element </u></b> class, and one of the following in order for them to know
+                    how to move: <b><u>prlx-norm</u>, <u>prlx-lerp</u>, or <u>prlx-sideways</u></b> (which can also lerp with the 
+                        addition of the <b> <u>with-lerp</u></b> class).
+                </p>
+            </div>
+            <div data-prlx_speed="-2" data-prlx_stop_t="0" data-prlx_stop_b="100" class="content col05 prlx-element border-bl prlx-lerp with-stop">
+                <h2 class="text-color-bg0 text-color-black scal-txt-04 not-on-med">2.</h2>
+                <p class="text-color-bg0 not-on-med">When you have made the layout per your liking inside the section and want to parallax
+                    some elements, give them the <b> <u> prlx-element </u></b> class, and one of the following in order for them to know
+                    how to move: <b><u>prlx-norm</u>, <u>prlx-lerp</u>, or <u>prlx-sideways</u></b> (which can also lerp with the 
+                        addition of the <b> <u>with-lerp</u></b> class).
+                </p>
+                <h2 class="text-color-bg0 text-color-black scal-txt-04 not-on-lar">3.</h2>
+                <p class="text-color-bg0 not-on-lar">When the classes are in place, give each element the speed by which they'll move with
+                    the <b>data-prlx_speed="x"</b>, where "x" is any number you wish. By adding a negative value, the element
+                    will parallax in the opposite direction.
+                </p>
+            </div>
+   
+            <div class="content col050 forth text-color-white">
+                <div data-prlx_speed="-2" data-prlx_stop_l="0" data-prlx_stop_r="500" class=" prlx-element  prlx-sideways with-lerp with-stop">
+                    <div style="" class="redi-bg border-bl forth-op">
+                    <h2 class="text-color-black scal-txt-04">4.</h2>
+                    <p>Last but not least, you may stop the elements from moving when they reach a certain point by applying the <b><u>"with-stop"</u></b> class and <b> data-prlx_stop_t="x" or ...stop_b/l/r="x"</b> where 
+                        "x" is the value at which the element will stop at, and <b>..stop_t/b/l/r</b> stand for <b>top, bottom, left and right</b> (the last two only apply for sideways elements).
+                        <br> (NOTE: no need to place negative values for either stop_t/b/l/r, this is taken care of ;)
+                    </p>
+                </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="content-row height25">
+        </section>
+
+        <div id="up" class="change-on-over up-opacity"><a>↑</a><div class="up-inner pos-ab align-self-cent push-back"></div></div>
+   
+    </div>
+
+</div>
+
+<div id="footer-wrapper" class="black-bg">
+    <div id="footer">
+        <div id="soc-menu" class="social-menu">
+            <ul>
+                <li class="tooltip">
+                    <a class="strike-through" href="mailto:kristianfiredi@gmail.com">gmail</a>  
+                </li>
+                <li class="tooltip">
+                    <a class="strike-through" href="https://www.facebook.com/kristian.firedi" >facebook</a>  
+                </li>
+                <li class="tooltip">
+                    <a class="strike-through" href="https://www.linkedin.com/in/kristian-firedi-441574178/" >linkedIn</a>
+                </li>
+                <li class="tooltip">
+                    <a class="strike-through" href="https://secure.skype.com/portal/profile" >skype</a>
+                </li>
+                <li class="tooltip">
+                    <a class="strike-through" href="https://www.instagram.com/naitsirk_firedi">instagram</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+        <div id="footer2"><p><span>Website designed and maintained by <span class="signature highlight-txt">Kristian Firedi</span>.</span></p></div>
+</div>
+
+<script src='js/main-for-parallax.js'></script>
+<script src='js/simple-parallax-script.js'></script>
+
+</body>
+
+</html>
