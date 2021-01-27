@@ -14,5 +14,5 @@ Wisit this [page](https://krisdifire.github.io/parallax.html "Parallax") for a n
 examples in action.
 # Questions?
 Either leave them here, or find my contact info on my [portfolio](https://krisdifire.github.io/ "Kris' portfolio").
-I would love to hear how this script can be more optimized and improved upon.
+I would love to hear how this script could be further optimized and improved upon.
 # Cheers!
