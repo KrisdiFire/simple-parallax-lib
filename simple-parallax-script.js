@@ -10,28 +10,93 @@
 //Parallax Function w Lerp
 ////////////////////////////////////////////////
 
-let value_lerp = 0;
-//initialisator
-function runner() {
-    let prlxElements = document.querySelectorAll('.prlx-element');
+class PrlxElements {
+    constructor () {
+        this.elements = document.querySelectorAll('.prlx-element');
+        this.cache = [];
+        this.initialize();
+    }
 
-    for (let i = 0, n = prlxElements.length; i < n; ++i) {
+    setCache() {
+        this.elements.forEach((element) => {
+            const elemCache = {};
+            // The actual element
+            elemCache.el = element;
+            // Get parents
+            elemCache.parents = getParents(element);
+            // Transform speed
+            elemCache.speed = element.dataset.prlxSpeed;
+            // Stop top pos
+            elemCache.stop_t = element.dataset.prlxStopT;
+            // Stop bot pos
+            elemCache.stop_b = element.dataset.prlxStopB;
+            // Stop left pos
+            elemCache.stop_l = element.dataset.prlxStopL;
+            // Stop right pos
+            elemCache.stop_r = element.dataset.prlxStopR;
+            // Starting position
+            elemCache.sy = getValue(element);
+            // Easing amount
+            elemCache.ease = 0.08;
+            // Changed position initialized as starting position
+            elemCache.dy = elemCache.sy;
+            // Add this to the list of scrolling element objects
+            this.cache.push(elemCache);
+        });
+      }
 
-        if (prlxElements[i].classList.contains('on-small') && window.innerWidth > 768) {
-            prlxElements[i].classList.remove('on-small');
-        }
-        if (window.innerWidth > 768 && prlxElements[i].classList.contains('on-small') == false /*&& window.innerHeight < window.innerWidth*/) { 
-                transform(prlxElements[i], value_lerp);
-        } else { 
-            prlxElements[i].style.transform = `translate3d(0, 0, 0)`; 
-            prlxElements[i].classList.add('on-small');
-        }
+    runner() {
+        // let n = this.cache.length;
+        // for (let i = 0; i < n; ++i) {
+        //     this.cache[i].sy = getValue(this.cache[i].el) * this.cache[i].speed;
+        // }
+        this.cache.forEach((elem) => {
+            elem.sy = getValue(elem.el) * elem.speed;
+        });
+    }
 
+    transform() {
+        // Iterate through each object w/ index in mind
+        this.cache.forEach((elem) => {
+
+            if (window.innerWidth > 769) {
+  
+                elem.dy = lerp(elem.dy, elem.sy, elem.ease);
+
+                if (elem.el.classList.contains('prlx-sideways')) {
+                    if (elem.el.classList.contains('with-lerp')) {
+                        transOptions(elem.el, elem.stop_r, elem.stop_l, elem.dy);
+                    }
+                    else {
+                        transOptions(elem.el, elem.stop_r, elem.stop_l, elem.sy);
+                    }
+                }
+                if (elem.el.classList.contains('prlx-norm')) {
+                    transOptions(elem.el, elem.stop_b, elem.stop_t, elem.sy);
+                }
+                if (elem.el.classList.contains('prlx-lerp')) {
+                    transOptions(elem.el, elem.stop_b, elem.stop_t, elem.dy);
+                }
+            } else {
+                elem.el.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)`;
+            }
+        });
+
+        // After updating all scrolling element metadata
+        // Animate the changes
+        window.requestAnimationFrame(this.transform.bind(this));  
+    }
+
+    initialize() {
+        this.setCache();
+        this.transform();
+        this.runner();
+        window.addEventListener('scroll', this.runner.bind(this));
+        // window.requestAnimationFrame(this.transform.bind(this));
     }
 }
-runner();
-window.addEventListener('scroll', runner);
-//get all parents
+const prlx = new PrlxElements();
+// get parents of element that'll be used in getting the transform value
 function getParents(elem) {
     let parents = [];
     while (elem.parentNode && elem.parentNode.nodeName
@@ -48,11 +113,9 @@ function getValue(item) {
         win_off = window.pageYOffset,
         elemPar_h = item.parentNode.clientHeight,
         totalParOff = [];
-    //for each parent, calculate its offset top, and push into array totalParOff
     for (let i = 0, n = parents.length; i < n; ++i) {
         totalParOff.push(parents[i].offsetTop);
     }
-    //reduce all of the numbers in the totalParOff array into this var
     let totalParOffSum = totalParOff.reduce(function (accumulator,
             currentValue) {
             return accumulator + currentValue;
@@ -66,142 +129,43 @@ function lerp(a, b, n) {
     a = (1 - n) * a + n * b;
     return Math.floor(a * 100) / 100;
 }
-//transform the elements based on the previous calculations and their respective classes
-function transform(el, vl) {
-    if (el.classList.contains('prlx-element') && (el.classList.contains('prlx-lerp') || 
-        el.classList.contains('prlx-norm') || el.classList.contains('prlx-stop-tb') || 
-        el.classList.contains('prlx-sideways')) == false) {
-        console.log(el);
-        throw 'Missing prlx-identifier on prlx-element';
-    }
-    if (el.closest(".prlx-section") == null) {
-        console.log(el);
-        throw 'Missing prlx-section at prlx-element';
-    }
-    //WITH LERP//
-    if (el.classList.contains("prlx-lerp") && (isInView(el.closest(".prlx-section")) || isInView(el)) && 
-        el.classList.contains("active") == false) {
-        el.classList.add('active');
-        let transformPrlxLerp = function () {
-            if (isInView(el.closest(".prlx-section")) || isInView(el)) {
-                let value = getValue(el) * el.dataset.prlx_speed;
-                vl = lerp(vl, value, 0.08);
-                let stop_t = el.dataset.prlx_stop_t;
-                let stop_b = el.dataset.prlx_stop_b;
-                if (el.classList.contains('with-stop')) {
-                    if (vl < stop_b && vl > stop_t * -1) {
-                        el.style.transform =
-                            `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${vl}, 0, 1)`;
-                    }
-                    if (el.classList.contains('with-stop') && vl > stop_b && vl > stop_t * -1) {
-                        el.style.transform = 
-                            `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_b}, 0, 1)`;
-                    }
-                    if (el.classList.contains('with-stop') && vl < stop_b && vl < stop_t * -1) {
-                        el.style.transform = 
-                            `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_t * -1}, 0, 1)`;
-                    }
-                } else {
-                    el.style.transform =
-                        `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${vl}, 0, 1)`;
-                }
-                window.requestAnimationFrame(transformPrlxLerp);
+//check for stop pos or lerp 
+function transOptions(elem, stop_1, stop_2, value) {
+    if (isInView(elem.closest(".prlx-section")) || isInView(elem)) {
+        if (stop_1 == undefined || stop_2 == undefined) {
+            if (elem.classList.contains('prlx-sideways')) {
+                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
             } else {
-                el.classList.remove("active");
-                window.cancelAnimationFrame(transformPrlxLerp);
-            }
-        };
-        transformPrlxLerp();
-    }
-    //WITHOUT LERP//
-    if (el.classList.contains("prlx-norm")) {
-        let transformPrlxNorm = function () {
-            if (isInView(el.closest(".prlx-section")) || isInView(el)) {
-                let value = getValue(el) * el.dataset.prlx_speed;
-                let stop_t = el.dataset.prlx_stop_t;
-                let stop_b = el.dataset.prlx_stop_b;
-                if (el.classList.contains('with-stop')) {
-                    if (value < stop_b && value > stop_t * -1) {
-                        el.style.transform =
-                            `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
-                    }
-                    if (el.classList.contains('with-stop') && value > stop_b && value > stop_t * -1) {
-                        el.style.transform = 
-                            `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_b}, 0, 1)`;
-                    }
-                    if (el.classList.contains('with-stop') && value < stop_b && value < stop_t * -1) {
-                        el.style.transform = 
-                            `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_t * -1}, 0, 1)`;
-                    }
-                } else {
-                    el.style.transform =
-                        `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
-                }
-            }
-        };
-        transformPrlxNorm();
-    }
-    //SIDEWAYS//
-    if (el.classList.contains('prlx-sideways') && (isInView(el.closest(".prlx-section")) || isInView(el))) {
-        let value = getValue(el) * el.dataset.prlx_speed;
-        let stop_l = el.dataset.prlx_stop_l;
-        let stop_r = el.dataset.prlx_stop_r;
-        //without lerp
-        if (el.classList.contains('with-lerp') == false) {
-            if (el.classList.contains('with-stop')) {
-                if (value < stop_r && value > stop_l * -1) {
-                    el.style.transform =
-                       `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
-                }
-                if (el.classList.contains('with-stop') && value > stop_r && value > stop_l * -1) {
-                    el.style.transform = 
-                        `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_r}, 0, 0, 1)`;
-                }
-                if (el.classList.contains('with-stop') && value < stop_r && value < stop_l * -1) {
-                    el.style.transform = 
-                        `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_l * -1}, 0, 0, 1)`;
-                }
-            } else {
-                el.style.transform =
-                   `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
+                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
             }
         }
-        //with lerp
-        if (el.classList.contains('with-lerp') && el.classList
-            .contains("active") == false) {
-            el.classList.add('active');
-            let transformSide = function () {
-                if (isInView(el.closest(".prlx-section")) || isInView(el)) {
-                    let value = getValue(el) * el.dataset.prlx_speed;
-                    vl = lerp(vl, value, 0.08);
-                    if (el.classList.contains('with-stop')) {
-                        if (vl < stop_r && vl > stop_l * -1) {
-                            el.style.transform =
-                               `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${vl}, 0, 0, 1)`;
-                        }
-                        if (el.classList.contains('with-stop') && vl > stop_r && vl > stop_l * -1) {
-                            el.style.transform = 
-                                `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_r}, 0, 0, 1)`;
-                        }
-                        if (el.classList.contains('with-stop') && vl < stop_r && vl < stop_l * -1) {
-                            el.style.transform = 
-                                `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_l * -1}, 0, 0, 1)`;
-                        }
-                    } else {
-                        el.style.transform =
-                           `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${vl}, 0, 0, 1)`;
-                    }
-                    window.requestAnimationFrame(transformSide);
+        else {
+            if (value < stop_1 && value > stop_2 * -1) {
+                if (elem.classList.contains('prlx-sideways')) {
+                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
                 } else {
-                    el.classList.remove("active");
-                    window.cancelAnimationFrame(transformSide);
+                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
                 }
-            };
-            transformSide();
+            } else {
+                if (value > stop_1 && value > stop_2 * -1) {
+                    if (elem.classList.contains('prlx-sideways')) { 
+                        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_1}, 0, 0, 1)`;
+                    } else { 
+                        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_1}, 0, 1)`;
+                    }
+                }
+                if (value < stop_1 && value < stop_2 * -1) {
+                    if (elem.classList.contains('prlx-sideways')) {
+                        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_2}, 0, 0, 1)`;
+                    } else {
+                        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_2}, 0, 1)`;
+                    }
+                }
+            }
         }
     }
 }
-//is an element in the viewport (top/bot - it will work if it's hidden on the sides)
+//is the element in the viewport (not taking into account the x axis)
 function isInView(el) {
     let rect = el.getBoundingClientRect();
     return rect.top < window.innerHeight && rect.bottom >= 0;
