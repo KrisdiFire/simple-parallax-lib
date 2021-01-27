@@ -20,10 +20,8 @@ class PrlxElements {
     setCache() {
         this.elements.forEach((element) => {
             const elemCache = {};
-            // The actual element
+            // The element
             elemCache.el = element;
-            // Get parents
-            elemCache.parents = getParents(element);
             // Transform speed
             elemCache.speed = element.dataset.prlxSpeed;
             // Stop top pos
@@ -36,7 +34,7 @@ class PrlxElements {
             elemCache.stop_r = element.dataset.prlxStopR;
             // Starting position
             elemCache.sy = getValue(element);
-            // Easing amount
+            // Easing amount, maybe I'll implement so that the user can configure this value
             elemCache.ease = 0.08;
             // Changed position initialized as starting position
             elemCache.dy = elemCache.sy;
@@ -46,17 +44,14 @@ class PrlxElements {
       }
 
     runner() {
-        // let n = this.cache.length;
-        // for (let i = 0; i < n; ++i) {
-        //     this.cache[i].sy = getValue(this.cache[i].el) * this.cache[i].speed;
-        // }
         this.cache.forEach((elem) => {
             elem.sy = getValue(elem.el) * elem.speed;
         });
+        // window.requestAnimationFrame(this.runner.bind(this));
     }
 
     transform() {
-        // Iterate through each object w/ index in mind
+        // Iterate through each object and transform
         this.cache.forEach((elem) => {
 
             if (window.innerWidth > 769) {
@@ -81,46 +76,43 @@ class PrlxElements {
                 elem.el.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)`;
             }
         });
-
-        // After updating all scrolling element metadata
         // Animate the changes
         window.requestAnimationFrame(this.transform.bind(this));  
     }
 
     initialize() {
         this.setCache();
-        this.transform();
         this.runner();
+        this.transform();
         window.addEventListener('scroll', this.runner.bind(this));
-        // window.requestAnimationFrame(this.transform.bind(this));
     }
 }
 const prlx = new PrlxElements();
-// get parents of element that'll be used in getting the transform value
-function getParents(elem) {
+// get parents and their offsets that'll be used in getting the transform value
+function getParentsOff(elem) {
     let parents = [];
     while (elem.parentNode && elem.parentNode.nodeName
         .toLowerCase() != 'body') {
         elem = elem.parentNode;
         parents.push(elem);
     }
-    return parents;
-}
-//calculate the position in order for the element to be in its starting position when in center of the screen
-function getValue(item) {
-    let parents = getParents(item),
-        win_h = window.innerHeight,
-        win_off = window.pageYOffset,
-        elemPar_h = item.parentNode.clientHeight,
-        totalParOff = [];
+    totalParOff = [];
     for (let i = 0, n = parents.length; i < n; ++i) {
         totalParOff.push(parents[i].offsetTop);
     }
     let totalParOffSum = totalParOff.reduce(function (accumulator,
             currentValue) {
             return accumulator + currentValue;
-        }),
-        cont_scrolled = win_off - totalParOffSum + win_h / 2 - 
+        });
+    return totalParOffSum;
+}
+//calculate the position in order for the element to be in its starting position when in center of the screen
+function getValue(item) {
+    let parentsOff = getParentsOff(item),
+        win_h = window.innerHeight,
+        win_off = window.pageYOffset,
+        elemPar_h = item.parentNode.clientHeight,
+        cont_scrolled = win_off - parentsOff + win_h / 2 - 
         elemPar_h / 2;
     return cont_scrolled * 50 / win_h;
 }
@@ -129,7 +121,7 @@ function lerp(a, b, n) {
     a = (1 - n) * a + n * b;
     return Math.floor(a * 100) / 100;
 }
-//check for stop pos or lerp 
+//check for stop pos and/or lerp 
 function transOptions(elem, stop_1, stop_2, value) {
     if (isInView(elem.closest(".prlx-section")) || isInView(elem)) {
         if (stop_1 == undefined || stop_2 == undefined) {
