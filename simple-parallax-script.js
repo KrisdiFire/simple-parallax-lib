@@ -5,18 +5,15 @@
 	Version 1.1
 */
 'use-strict';
-
 ////////////////////////////////////////
 //Parallax Function w Lerp
 ////////////////////////////////////////////////
-
 class PrlxElements {
     constructor () {
         this.elements = document.querySelectorAll('.prlx-element');
         this.cache = [];
         this.initialize();
     }
-
     setCache() {
         this.elements.forEach((element) => {
             const elemCache = {};
@@ -34,6 +31,8 @@ class PrlxElements {
             elemCache.stop_r = element.dataset.prlxStopR;
             // Starting position
             elemCache.sy = getValue(element);
+            // All parent offsets
+            // elemCache.paroff = getParentsOff(element);
             // Easing amount, maybe I'll implement so that the user can configure this value
             elemCache.ease = 0.08;
             // Changed position initialized as starting position
@@ -41,28 +40,21 @@ class PrlxElements {
             // Add this to the list of scrolling element objects
             this.cache.push(elemCache);
         });
-      }
-
+    }
     runner() {
         this.cache.forEach((elem) => {
             elem.sy = getValue(elem.el) * elem.speed;
         });
-        // window.requestAnimationFrame(this.runner.bind(this));
     }
-
     transform() {
         // Iterate through each object and transform
         this.cache.forEach((elem) => {
-
             if (window.innerWidth > 769) {
-  
                 elem.dy = lerp(elem.dy, elem.sy, elem.ease);
-
                 if (elem.el.classList.contains('prlx-sideways')) {
                     if (elem.el.classList.contains('with-lerp')) {
                         transOptions(elem.el, elem.stop_r, elem.stop_l, elem.dy);
-                    }
-                    else {
+                    } else {
                         transOptions(elem.el, elem.stop_r, elem.stop_l, elem.sy);
                     }
                 }
@@ -79,7 +71,6 @@ class PrlxElements {
         // Animate the changes
         window.requestAnimationFrame(this.transform.bind(this));  
     }
-
     initialize() {
         this.setCache();
         this.runner();
@@ -96,7 +87,7 @@ function getParentsOff(elem) {
         elem = elem.parentNode;
         parents.push(elem);
     }
-    totalParOff = [];
+    let totalParOff = [];
     for (let i = 0, n = parents.length; i < n; ++i) {
         totalParOff.push(parents[i].offsetTop);
     }
@@ -130,29 +121,23 @@ function transOptions(elem, stop_1, stop_2, value) {
             } else {
                 elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
             }
-        }
-        else {
-            if (value < stop_1 && value > stop_2 * -1) {
-                if (elem.classList.contains('prlx-sideways')) {
-                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
-                } else {
-                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
-                }
+        } else if (value < stop_1 && value > stop_2 * -1) {
+            if (elem.classList.contains('prlx-sideways')) {
+                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
             } else {
-                if (value > stop_1 && value > stop_2 * -1) {
-                    if (elem.classList.contains('prlx-sideways')) { 
-                        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_1}, 0, 0, 1)`;
-                    } else { 
-                        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_1}, 0, 1)`;
-                    }
-                }
-                if (value < stop_1 && value < stop_2 * -1) {
-                    if (elem.classList.contains('prlx-sideways')) {
-                        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_2}, 0, 0, 1)`;
-                    } else {
-                        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_2}, 0, 1)`;
-                    }
-                }
+                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
+            }
+        } else if (value > stop_1 && value > stop_2 * -1) {
+            if (elem.classList.contains('prlx-sideways')) { 
+                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_1}, 0, 0, 1)`;
+            } else { 
+                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_1}, 0, 1)`;
+            }
+        } else if (value < stop_1 && value < stop_2 * -1) {
+            if (elem.classList.contains('prlx-sideways')) {
+                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_2}, 0, 0, 1)`;
+            } else {
+                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_2}, 0, 1)`;
             }
         }
     }
