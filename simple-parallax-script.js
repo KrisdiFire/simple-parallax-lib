@@ -105,7 +105,7 @@ function getValue(item) {
         elemPar_h = item.parentNode.clientHeight,
         cont_scrolled = win_off - parentsOff + win_h / 2 - 
         elemPar_h / 2;
-    return cont_scrolled * 50 / win_h;
+    return cont_scrolled * (document.body.offsetHeight / 10) / win_h;
 }
 //linear interpolation func
 function lerp(a, b, n) {
@@ -115,7 +115,20 @@ function lerp(a, b, n) {
 //check for stop pos and/or lerp 
 function transOptions(elem, stop_1, stop_2, value) {
     if (isInView(elem.closest(".prlx-section")) || isInView(elem)) {
-        if (stop_1 == undefined || stop_2 == undefined) {
+        //
+        if (elem.classList.contains("stop-at-parent")) {
+            let elemParRect = elem.parentNode.getBoundingClientRect();
+            let elemRect = elem.getBoundingClientRect();
+            if (elem.classList.contains('prlx-sideways') == false) {
+                stop_1 = (elemParRect.height/2 - elemRect.height/2);
+                stop_2 = (elemParRect.height/2 - elemRect.height/2);
+            } else {
+                stop_1 = (elemParRect.width/2 - elemRect.width/2);
+                stop_2 = (elemParRect.width/2 - elemRect.width/2);
+            }
+        }
+        //
+        if ((stop_1 == undefined || stop_2 == undefined) && elem.classList.contains('stop-at-parent') == false) {
             if (elem.classList.contains('prlx-sideways')) {
                 elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
             } else {
@@ -135,9 +148,17 @@ function transOptions(elem, stop_1, stop_2, value) {
             }
         } else if (value < stop_1 && value < stop_2 * -1) {
             if (elem.classList.contains('prlx-sideways')) {
-                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_2}, 0, 0, 1)`;
+                if (elem.classList.contains("stop-at-parent")) {
+                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_2 * -1}, 0, 0, 1)`;
+                } else {
+                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_2}, 0, 0, 1)`;
+                }
             } else {
-                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_2}, 0, 1)`;
+                if (elem.classList.contains("stop-at-parent")) {
+                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_2 * -1}, 0, 1)`;
+                } else {
+                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_2}, 0, 1)`;
+                }
             }
         }
     }
