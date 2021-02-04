@@ -105,7 +105,7 @@ function getValue(item) {
         elemPar_h = item.parentNode.clientHeight,
         cont_scrolled = win_off - parentsOff + win_h / 2 - 
         elemPar_h / 2;
-    return cont_scrolled * (document.body.offsetHeight / 10) / win_h;
+    return cont_scrolled * 50 / win_h;
 }
 //linear interpolation func
 function lerp(a, b, n) {
