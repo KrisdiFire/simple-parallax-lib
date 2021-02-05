@@ -58,10 +58,10 @@ class PrlxElements {
                         transOptions(elem.el, elem.stop_r, elem.stop_l, elem.sy);
                     }
                 }
-                if (elem.el.classList.contains('prlx-norm')) {
+                else if (elem.el.classList.contains('prlx-norm')) {
                     transOptions(elem.el, elem.stop_b, elem.stop_t, elem.sy);
                 }
-                if (elem.el.classList.contains('prlx-lerp')) {
+                else if (elem.el.classList.contains('prlx-lerp')) {
                     transOptions(elem.el, elem.stop_b, elem.stop_t, elem.dy);
                 }
             } else {
@@ -115,7 +115,6 @@ function lerp(a, b, n) {
 //check for stop pos and/or lerp 
 function transOptions(elem, stop_1, stop_2, value) {
     if (isInView(elem.closest(".prlx-section")) || isInView(elem)) {
-        //
         if (elem.classList.contains("stop-at-parent")) {
             let elemParRect = elem.parentNode.getBoundingClientRect();
             let elemRect = elem.getBoundingClientRect();
@@ -127,40 +126,26 @@ function transOptions(elem, stop_1, stop_2, value) {
                 stop_2 = (elemParRect.width/2 - elemRect.width/2);
             }
         }
-        //
-        if ((stop_1 == undefined || stop_2 == undefined) && elem.classList.contains('stop-at-parent') == false) {
-            if (elem.classList.contains('prlx-sideways')) {
-                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
-            } else {
-                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
-            }
-        } else if (value < stop_1 && value > stop_2 * -1) {
-            if (elem.classList.contains('prlx-sideways')) {
-                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
-            } else {
-                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
-            }
+        if ((stop_1 == undefined || stop_2 == undefined) && elem.classList.contains('stop-at-parent') == false || 
+            (value < stop_1 && value > stop_2 * -1)) {
+            doer(elem, value);
         } else if (value > stop_1 && value > stop_2 * -1) {
-            if (elem.classList.contains('prlx-sideways')) { 
-                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_1}, 0, 0, 1)`;
-            } else { 
-                elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_1}, 0, 1)`;
-            }
+            doer(elem, stop_1);
         } else if (value < stop_1 && value < stop_2 * -1) {
-            if (elem.classList.contains('prlx-sideways')) {
-                if (elem.classList.contains("stop-at-parent")) {
-                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_2 * -1}, 0, 0, 1)`;
-                } else {
-                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${stop_2}, 0, 0, 1)`;
-                }
+            if (elem.classList.contains("stop-at-parent")) {
+                doer(elem, stop_2 * -1);
             } else {
-                if (elem.classList.contains("stop-at-parent")) {
-                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_2 * -1}, 0, 1)`;
-                } else {
-                    elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${stop_2}, 0, 1)`;
-                }
+                doer(elem, stop_2);
             }
         }
+    }
+}
+// doing the actual transformation
+function doer(elem, value) {
+    if (elem.classList.contains('prlx-sideways')) {
+        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ${value}, 0, 0, 1)`;
+    } else {
+        elem.style.transform = `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, ${value}, 0, 1)`;
     }
 }
 //is the element in the viewport (not taking into account the x axis)
